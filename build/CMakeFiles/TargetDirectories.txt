@@ -1,3 +1,0 @@
-/tmp/play-bik-init/build/CMakeFiles/play-bik.dir
-/tmp/play-bik-init/build/CMakeFiles/edit_cache.dir
-/tmp/play-bik-init/build/CMakeFiles/rebuild_cache.dir
