@@ -1,0 +1,53 @@
+[cmake]
+version = "3.20"
+
+[project]
+name = "play-bik"
+version = "1.0.0"
+description = "Bink video/audio decoder plugin for NOLF Improved"
+
+[options]
+PLAY_BIK_BUILD_TESTS = false
+
+# --- Main shared library ---
+[target.play-bik]
+type = "shared"
+sources = [
+    "src/bink_demuxer.cpp",
+    "src/bink_video_decoder.cpp",
+    "src/bink_audio_decoder.cpp",
+    "src/bink_tables.cpp",
+    "src/plugin.cpp"
+]
+compile-features = ["cxx_std_17"]
+include-directories = ["src", "include"]
+cmake-after = """
+set_target_properties(play-bik PROPERTIES
+    C_VISIBILITY_PRESET hidden
+    CXX_VISIBILITY_PRESET hidden
+    VISIBILITY_INLINES_HIDDEN ON
+)
+"""
+
+# --- Tests (optional, requires doctest) ---
+[target.play-bik-test-demuxer]
+condition = "PLAY_BIK_BUILD_TESTS"
+type = "executable"
+sources = ["tests/test_demuxer.cpp"]
+compile-features = ["cxx_std_17"]
+link-libraries = ["play-bik"]
+cmake-after = """
+target_include_directories(play-bik-test-demuxer PRIVATE src)
+add_test(NAME test_demuxer COMMAND play-bik-test-demuxer)
+"""
+
+[target.play-bik-test-audio]
+condition = "PLAY_BIK_BUILD_TESTS"
+type = "executable"
+sources = ["tests/test_audio.cpp"]
+compile-features = ["cxx_std_17"]
+link-libraries = ["play-bik"]
+cmake-after = """
+target_include_directories(play-bik-test-audio PRIVATE src)
+add_test(NAME test_audio COMMAND play-bik-test-audio)
+"""
